@@ -1,0 +1,43 @@
+volumes:
+  mongodb_data: { driver: local }
+
+services:
+  # nginx:
+  #   image: nginx:alpine
+  #   ports:
+  #     - 8000:80
+  #   volumes:
+  #     - ./webpage/:/var/www
+  #     - ./default.conf:/etc/nginx/conf.d/default.conf
+  web:
+    build: .
+    restart: always
+    ports:
+      - 8080:3000
+    environment:
+      MONGO_URL: "${MONGO_URL:-\
+          mongodb://${MONGODB_ADVERTISED_HOSTNAME:-mongodb}:${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}/\
+          ${MONGODB_DATABASE:-webapp}?replicaSet=${MONGODB_REPLICA_SET_NAME:-rs0}}"
+      MONGO_OPLOG_URL: "${MONGO_OPLOG_URL:\
+          -mongodb://${MONGODB_ADVERTISED_HOSTNAME:-mongodb}:${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}/\
+          local?replicaSet=${MONGODB_REPLICA_SET_NAME:-rs0}}"
+    depends_on:
+      - mongodb
+    volumes:
+      - ./webapp/:/user/app/
+    working_dir: /user/app/
+    command: ["nodemon", "index.js"]
+  mongodb:
+    image: docker.io/bitnami/mongodb:${MONGODB_VERSION:-5.0}
+    restart: always
+    volumes:
+      - mongodb_data:/bitnami/mongodb
+    environment:
+      MONGODB_REPLICA_SET_MODE: primary
+      MONGODB_REPLICA_SET_NAME: ${MONGODB_REPLICA_SET_NAME:-rs0}
+      MONGODB_PORT_NUMBER: ${MONGODB_PORT_NUMBER:-27017}
+      MONGODB_INITIAL_PRIMARY_HOST: ${MONGODB_INITIAL_PRIMARY_HOST:-mongodb}
+      MONGODB_INITIAL_PRIMARY_PORT_NUMBER: ${MONGODB_INITIAL_PRIMARY_PORT_NUMBER:-27017}
+      MONGODB_ADVERTISED_HOSTNAME: ${MONGODB_ADVERTISED_HOSTNAME:-mongodb}
+      MONGODB_ENABLE_JOURNAL: ${MONGODB_ENABLE_JOURNAL:-true}
+      ALLOW_EMPTY_PASSWORD: ${ALLOW_EMPTY_PASSWORD:-yes}
