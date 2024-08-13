@@ -1,5 +1,11 @@
 # Websocket Chat
 
+# Setup
+```bash
+cd webapp
+npm install
+```
+
 # Run
 ```bash
 # Start up containers detached
