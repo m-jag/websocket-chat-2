@@ -1,0 +1,1 @@
+curl -X DELETE -v http://localhost:8080/chat/66b56ea8d3d7d0e5bf5544bf

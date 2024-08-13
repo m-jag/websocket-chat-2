@@ -1,0 +1,1 @@
+curl -X POST -v http://localhost:8080/chat/ -H "Content-Type: application/json" -d '{"name": "example name", "message": "this is a test"}'

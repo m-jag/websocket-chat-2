@@ -1,0 +1,1 @@
+curl -s -X PATCH http://localhost:8080/chat/66b5816874e4d4361e9cae0a -H "Content-Type: application/json" -d '{"name": "example name", "message": "this is a updated"}'
