@@ -1,30 +1,57 @@
 CHAT_URL = "/chat/"
-outputDiv = document.getElementById("output")
-errorDiv = document.getElementById("error")
 
-const getChats = async (callback) => {
+const getChats = async (callback, errorCB) => {
     try {
-        const response = await fetch(CHAT_URL);
-        const myJSON = await response.json();
+        let response = await fetch(CHAT_URL);
+        let myJSON = await response.json();
         callback(myJSON);
+        // throw new Error("Test")
     }
     catch (error) {
-        errorDiv.innerHTML = error.message;
+        errorCB(error)
     }
 }
 
-const getChats = async (callback) => {
+const getChat = async (callback, errorCB, chatId) => {
     try {
-        const response = await  idfetch`"CHAT_URL`);
-        const myJSON = await response.json();
+        let response = await fetch(`${CHAT_URL}${chatId}`);
+        let myJSON = await response.json();
         callback(myJSON);
     }
     catch (error) {
-        errorDiv.innerHTML = error.message;
+        errorCB(error)
     }
 }
 
+const deleteChat = async (callback, errorCB, chatId) => {
+    try {
+        let response = await fetch(`${CHAT_URL}${chatId}`, {
+            method: "DELETE"
+        });
+        let myJSON = await response.json();
+        callback(myJSON);
+    }
+    catch (error) {
+        errorCB(error)
+    }
+}
 
-getChats((data) => {
-    outputDiv.innerHTML = JSON.stringify(data);
-});
+const addChat = async (callback, errorCB, name, message) => {
+    try {
+        console.log(
+            JSON.stringify( { name, message } )
+        )
+        let response = await fetch(`${CHAT_URL}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify( { name, message } )
+        });
+        let myJSON = await response.json();
+        callback(myJSON);
+    }
+    catch (error) {
+        errorCB(error)
+    }
+}

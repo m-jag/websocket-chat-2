@@ -2,6 +2,7 @@
     <head>
         <!-- <meta http-equiv="refresh" content="20"> -->
         <link rel="stylesheet" href="/static/css/styles.css">
+        <script src="/static/js/chat.js"></script>
     </head>
     <body>
         <h1>Testing</h1>
@@ -9,21 +10,91 @@
         <div id="output"></div>
         <h2>Error:</h2>
         <div id="error"></div>
+
+        <table id="tests">
+            <tr>
+                <th>Name</th>
+                <th>Response</th>
+                <th>Error</th>
+            </tr>
+            <tr>
+                <td class="test-name">addChat</td>
+                <td class="test-response"></td>
+                <td class="test-error"></td>
+            </tr>
+            <tr>
+                <td class="test-name">getChats</td>
+                <td class="test-response"></td>
+                <td class="test-error"></td>
+            </tr>
+            <tr>
+                <td class="test-name">getChat</td>
+                <td class="test-response"></td>
+                <td class="test-error"></td>
+            </tr>
+            <tr>
+                <td class="test-name">deleteChat</td>
+                <td class="test-response"></td>
+                <td class="test-error"></td>
+            </tr>
+            <script type="text/javascript">
+                let testTable = document.getElementById("tests")
+
+                // Test 1: addChat
+                addChat((data) => {
+                    testTable.rows[1].cells[1].innerHTML = JSON.stringify(data);
+                }, (err) => {
+                    testTable.rows[1].cells[2].innerHTML = err;
+                }, "example name", "this is a test");
+
+                // Test 2: getChats
+                new Promise((res, rej) => {
+                    getChats((data) => {
+                        testTable.rows[2].cells[1].innerHTML = JSON.stringify(data);
+                        res(data);
+                    }, (err) => {
+                        testTable.rows[2].cells[2].innerHTML = err
+                        rej(err)
+                    });
+                }).then((chats) => {
+                    // Test 3: getChat
+                    if (chats.length > 0) {
+                        getChat((data) => {
+                            testTable.rows[3].cells[1].innerHTML = JSON.stringify(data);
+                        }, (err) => {
+                            testTable.rows[3].cells[2].innerHTML = err;
+                        }, chats[0]["_id"]);
+                    }
+                    else {
+                        testTable.rows[2].cells[2].innerHTML = "No chats"
+                    }
+
+                    // Test 4: deleteChat
+                    if (chats.length > 0) {
+                        deleteChat((data) => {
+                            testTable.rows[4].cells[1].innerHTML = JSON.stringify(data);
+                        }, (err) => {
+                            testTable.rows[4].cells[2].innerHTML = err;
+                        }, chats[0]["_id"]);
+                    }
+                    else {
+                        testTable.rows[2].cells[2].innerHTML = "No chats"
+                    }
+
+                })
+
+                
+            </script>
+        </table>
     </body>
     <footer>
         <script type="text/javascript">
-            url = "/chat/"
-            outputDiv = document.getElementById("output")
-            errorDiv = document.getElementById("error")
-            fetch(url).then(function(response) {
-                console.log("test");
-                return response.text();
-            }).then(function(data) {
-                outputDiv.innerHTML = data
-                errorDiv.innerHTML = "No error."
-            }).catch(function(err) {
-                outputDiv.innerHTML = "Error occured."
-                errorDiv.innerHTML = err.message
+            let outputDiv = document.getElementById("output")
+            let errorDiv = document.getElementById("error")
+            getChats((data) => {
+                outputDiv.innerHTML = JSON.stringify(data);
+            }, (err) => {
+                errorDiv.innerHTML = err.message;
             });
         </script>
     </footer>

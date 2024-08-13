@@ -12,20 +12,14 @@
     </body>
     <footer>
         <script src="/static/js/chat.js"></script>
-        <!-- <script type="text/javascript">
-            url = "/chat/"
+        <script type="text/javascript">
             outputDiv = document.getElementById("output")
             errorDiv = document.getElementById("error")
-            fetch(url).then(function(response) {
-                console.log("test");
-                return response.text();
-            }).then(function(data) {
-                outputDiv.innerHTML = data
-                errorDiv.innerHTML = "No error."
-            }).catch(function(err) {
-                outputDiv.innerHTML = "Error occured."
-                errorDiv.innerHTML = err.message
+            getChats((data) => {
+                outputDiv.innerHTML = JSON.stringify(data);
+            }, (err) => {
+                errorDiv.innerHTML = err.message;
             });
-        </script> -->
+        </script>
     </footer>
 </html>
