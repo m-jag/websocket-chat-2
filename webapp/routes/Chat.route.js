@@ -3,6 +3,8 @@ const router = express.Router();
 
 const ChatController = require('../controllers/Chat.controller');
 
+router.use(express.json())
+
 //Get a list of all chats
 router.get('/', ChatController.getAllChats);
 

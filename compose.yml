@@ -15,15 +15,22 @@ services:
     ports:
       - 8080:3000
     environment:
-      MONGODB_URI: mongodb://mongo:27017
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+      # MONGODB_URI: mongodb://root:example@mongo:27017/
+      ME_CONFIG_BASICAUTH: false
     depends_on:
       - mongo
     volumes:
       - ./webapp/:/user/app/
     working_dir: /user/app/
     command: ["nodemon", "index.js"]
+
   mongo:
     container_name: mongo
     image: mongo
-    ports:
-      - "27017:27017"
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example

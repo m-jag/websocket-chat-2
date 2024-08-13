@@ -2,11 +2,12 @@ const createError = require('http-errors');
 const mongoose = require('mongoose');
 
 const Chat = require('../models/Chat.model');
+const MAX_MESSAGES_PER_QUERY = 10
 
 module.exports = {
   getAllChats: async (req, res, next) => {
     try {
-      const chats = await Chat.find({}, { __v: 0 });
+      const chats = await Chat.find({}, { __v: 0 }).limit(MAX_MESSAGES_PER_QUERY).sort({time: -1});
       res.send(chats);
     } catch (error) {
       console.log(error.message);
@@ -15,6 +16,7 @@ module.exports = {
 
   createNewChat: async (req, res, next) => {
     try {
+      console.log(req.body)
       const chat = new Chat(req.body);
       const result = await chat.save();
       res.send(result);
@@ -50,7 +52,7 @@ module.exports = {
     try {
       const id = req.params.id;
       const updates = req.body;
-      const options = { new: true };
+      const options = { new: true, runValidators: true };
 
       const result = await Chat.findByIdAndUpdate(id, updates, options);
       if (!result) {
@@ -62,7 +64,6 @@ module.exports = {
       if (error instanceof mongoose.CastError) {
         return next(createError(400, 'Invalid Chat Id'));
       }
-
       next(error);
     }
   },
