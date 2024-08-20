@@ -2,24 +2,16 @@
     <head>
         <!-- <meta http-equiv="refresh" content="20"> -->
         <link rel="stylesheet" href="/static/css/styles.css">
+        <script src="/static/js/chat.js"></script>
     </head>
     <body>
-        <h1>Testing</h1>
-        <h2>Output:</h2>
-        <div id="output"></div>
-        <h2>Error:</h2>
-        <div id="error"></div>
+        <div id="chats"></div>
+        <div id="chat-box">
+            <textarea id="chat-box-message">
+                Message...
+            </textarea>
+        </div>
     </body>
     <footer>
-        <script src="/static/js/chat.js"></script>
-        <script type="text/javascript">
-            outputDiv = document.getElementById("output")
-            errorDiv = document.getElementById("error")
-            getChats((data) => {
-                outputDiv.innerHTML = JSON.stringify(data);
-            }, (err) => {
-                errorDiv.innerHTML = err.message;
-            });
-        </script>
     </footer>
 </html>
